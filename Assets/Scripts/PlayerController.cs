@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     public float smooth = 2.0F;
     public float tiltAngle = 30.0F;
     public GameObject loseText;
+    
 
     void Start ()
 	{
@@ -21,30 +23,50 @@ public class PlayerController : MonoBehaviour {
     }
 	void FixedUpdate ()
 	{
+        if(Input.GetButtonDown("Jump"))
+        {
+            
+            SceneManager.LoadScene("testing1");
+        }
         if(transform.position.y <= -3)
         {
             loseText.SetActive(true);
+            Time.timeScale = 0;
         }
-
-        
-             float moveHorizontal = Input.GetAxis ("Horizontal");
-              float moveVertical = Input.GetAxis ("Vertical");
+        float moveHorizontal;
+        float moveVertical;
+        if (SystemInfo.deviceType == DeviceType.Desktop)
+        {
+            
+            moveHorizontal = Input.GetAxis("Horizontal");
+            moveVertical = Input.GetAxis("Vertical");
             //float moveHorizontal = Input.gyro.rotationRate.x;
             // float moveVertical = Input.gyro.rotationRate.y;
 
-              Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-            rb.AddForce (movement * speed);
+            
+        }
+        else
+        {
+             moveHorizontal = Input.gyro.rotationRate.x;
+             moveVertical = Input.gyro.rotationRate.y;
+            
+        }
+       Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+       rb.AddForce(movement * speed);
 
-          /*  float tiltAroundZ = Input.GetAxis("Horizontal") * tiltAngle;
-        float tiltAroundX = Input.GetAxis("Vertical") * tiltAngle;
+     /*   float tiltAroundZ = moveHorizontal * tiltAngle;
+        float tiltAroundX = moveVertical * tiltAngle;
         Quaternion target = Quaternion.Euler(tiltAroundX, 0, tiltAroundZ);
         plane.transform.rotation = Quaternion.Slerp(plane.transform.rotation, target, Time.deltaTime * smooth);
-        if(Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
         {
             Quaternion target2 = Quaternion.Euler(0, 0, 0);
             plane.transform.rotation = Quaternion.Slerp(plane.transform.rotation, target2, Time.deltaTime * smooth);
         }*/
+
         
+
+
     }
     private void OnCollisionEnter(Collision collision)
     {

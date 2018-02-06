@@ -24,6 +24,7 @@ public class score : MonoBehaviour {
             if (pointsCounter <= 0)
             {
                 loseText.SetActive(true);
+                Time.timeScale = 0;
             }
         }
     }
